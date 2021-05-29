@@ -53,7 +53,32 @@ sudo bpftrace -e 'tracepoint:i915:i915_request_queue { @[comm] = count(); }'
 
 ```
 
+### Lesson 5. Distribution of read() Bytes
 
+```bash
+sudo bpftrace -e 'tracepoint:syscalls:sys_exit_read /pid >= 5000/ { @bytes = hist(args->ret); }'
+sudo bpftrace -e 'tracepoint:syscalls:sys_exit_read /pid >= 5845/ { @bytes = hist(args->ret); }'
+```
+
+### Lesson 6. Kernel Dynamic Tracing of read() Bytes
+
+```bash
+sudo bpftrace -e 'kretprobe:vfs_read { @bytes = lhist(retval, 0, 2000, 200); }'
+sudo bpftrace -e 'kprobe:i915_gem_create_ioctl { printf("[%s-%d]\n", comm, pid); }'
+```
+
+### Lesson 12. Kernel Struct Tracing
+```bash
+sudo bpftrace path.bt
+```
+### 
+
+```bash
+sudo bpftrace -e 'kprobe:vfs_read { @start[tid] = nsecs; } kretprobe:vfs_read /@start[tid]/ { @ns[comm] = hist(nsecs - @start[tid]); delete(@start[tid]); }'
+
+sudo bpftrace -e 'kprobe:i915_gem_create_ioctl { printf("[%s-%d]\n", comm, pid); }'
+
+```
 ## bpftrace permission denied issue
 https://github.com/iovisor/bpftrace/issues/293
 
