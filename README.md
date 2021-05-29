@@ -12,6 +12,15 @@ or
 ```bash
  sudo apt install bpftrace  
 ```
+## examples
+
+```bash
+sudo bpftrace -l 'tracepoint:syscalls:sys_enter_*'
+
+sudo bpftrace -e 'BEGIN { printf("hello world\n"); }'
+
+sudo bpftrace -e 'tracepoint:syscalls:sys_enter_openat { printf("%s %s\n", comm, str(args->filename)); }'
+```
 
 #### bpftrace permission denied issue
 https://github.com/iovisor/bpftrace/issues/293
