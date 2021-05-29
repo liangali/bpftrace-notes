@@ -1,0 +1,6 @@
+#include <uapi/drm/i915_drm.h>
+
+kprobe:i915_gem_create_ioctl
+{
+	printf("[%s-%d]: i915_gem_create_ioctl: %d\n", comm, pid, ((struct drm_i915_gem_create *)arg1)->size);
+}
