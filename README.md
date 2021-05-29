@@ -19,3 +19,7 @@ https://github.com/iovisor/bpftrace/issues/293
 try running snap connect bpftrace:system-trace to enable bpftrace to access system tracing 
 (see http://smackerelofopinion.blogspot.com/2018/11/high-level-tracing-with-bpftrace.html)
 
+## reference
+
+One-Liner Tutorial
+https://github.com/iovisor/bpftrace/blob/master/docs/tutorial_one_liners.md
