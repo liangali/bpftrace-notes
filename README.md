@@ -12,6 +12,23 @@ or
 ```bash
  sudo apt install bpftrace  
 ```
+
+## build bpftrace from source code
+
+```bash
+sudo apt-get update
+sudo apt-get install -y bison cmake flex g++ git libelf-dev zlib1g-dev libfl-dev systemtap-sdt-dev binutils-dev
+sudo apt-get install -y llvm-7-dev llvm-7-runtime libclang-7-dev clang-7
+sudo apt-get install libgtest libgtest-dev libgmock-dev
+
+git clone https://github.com/iovisor/bpftrace
+mkdir bpftrace/build; cd bpftrace/build;
+
+cmake -DCMAKE_BUILD_TYPE=Release ..
+make -j8
+sudo make install
+```
+
 ## examples
 ### Lesson 1. Listing Probes
 
