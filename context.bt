@@ -1,0 +1,40 @@
+#include <uapi/drm/i915_drm.h>
+#include <uapi/drm/i915_drm_prelim.h>
+
+kprobe:i915_gem_context_setparam_ioctl /comm == "mpeg2vldemo"/
+{
+    $param2 = ((struct drm_i915_gem_context_param *)arg1)->param;
+    if ($param2 == 0) {
+        $type = "I915_CONTEXT_DEFAULT_PRIORITY";
+    } else if ($param2 == 1) {
+        $type = "I915_CONTEXT_PARAM_BAN_PERIOD";
+    } else if ($param2 == 2) {
+        $type = "I915_CONTEXT_PARAM_NO_ZEROMAP";
+    } else if ($param2 == 3) {
+        $type = "I915_CONTEXT_PARAM_GTT_SIZE";
+    } else if ($param2 == 4) {
+        $type = "I915_CONTEXT_PARAM_NO_ERROR_CAPTURE";
+    } else if ($param2 == 5) {
+        $type = "I915_CONTEXT_PARAM_BANNABLE";
+    } else if ($param2 == 6) {
+        $type = "I915_CONTEXT_PARAM_PRIORITY";
+    } else if ($param2 == 7) {
+        $type = "I915_CONTEXT_PARAM_SSEU";
+    } else if ($param2 == 8) {
+        $type = "I915_CONTEXT_PARAM_RECOVERABLE";
+    } else if ($param2 == 9) {
+        $type = "I915_CONTEXT_PARAM_VM";
+    } else if ($param2 == 10) {
+        $type = "I915_CONTEXT_PARAM_ENGINES";
+    } else {
+        $type = "UNKNOWN";
+    }
+
+    printf("[%s-%d]: i915_gem_context_setparam_ioctl: %-40s, %-4d, %-4d, 0x%-8x\n", 
+        comm, pid, 
+        $type,
+        ((struct drm_i915_gem_context_param *)arg1)->ctx_id,
+        ((struct drm_i915_gem_context_param *)arg1)->size,
+        ((struct drm_i915_gem_context_param *)arg1)->value
+    );
+}
