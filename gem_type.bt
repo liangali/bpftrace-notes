@@ -1,0 +1,36 @@
+#include <uapi/drm/i915_drm.h>
+#include <uapi/drm/i915_drm_prelim.h>
+#include <linux/io-mapping.h>
+
+#include "drm/i915/intel_memory_region.h"
+
+
+kprobe:shmem_object_init /comm == "vainfo"/
+{
+    printf("[%s-%d]: shmem_object_init: %d, %lld\n", 
+        comm, pid, 
+        ((struct intel_memory_region *)arg0)->id,
+        arg2
+    );
+    @["system", arg2] = count();
+}
+
+kprobe:__i915_gem_lmem_object_init /comm == "vainfo"/
+{
+    printf("[%s-%d]: __i915_gem_lmem_object_init: %d, %lld\n", 
+        comm, pid, 
+        ((struct intel_memory_region *)arg0)->id,
+        arg2
+    );
+    @["local", arg2] = count();
+}
+
+kprobe:_i915_gem_object_stolen_init /comm == "vainfo"/
+{
+    printf("[%s-%d]: _i915_gem_object_stolen_init: %d, %lld\n", 
+        comm, pid, 
+        1,
+        2
+    );
+    @["stolen", arg2] = count();
+}

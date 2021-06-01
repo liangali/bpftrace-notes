@@ -1,0 +1,12 @@
+#include <uapi/drm/i915_drm.h>
+#include <uapi/drm/i915_drm_prelim.h>
+
+kprobe:i915_gem_create_ioctl /comm == "vainfo"/
+{
+    printf("[%s-%d]: i915_gem_create_ioctl: %d, 0x%x\n", 
+        comm, pid, 
+        ((struct prelim_drm_i915_gem_create_ext *)arg1)->size,
+        ((struct prelim_drm_i915_gem_create_ext *)arg1)->extensions
+    );
+    @[((struct prelim_drm_i915_gem_create_ext *)arg1)->size] = count();
+}
