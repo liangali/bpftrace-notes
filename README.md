@@ -28,8 +28,22 @@ cmake -DCMAKE_BUILD_TYPE=Release ..
 make -j8
 sudo make install
 ```
+## bpftrace + uprobe
 
-## examples
+```bash
+sudo bpftrace -e 'uprobe:/lib/x86_64-linux-gnu/libc.so.6:fopen { printf("fopen: %s\n", str(arg0)); }'
+
+sudo bpftrace -e 'uprobe:/usr/lib/x86_64-linux-gnu/libva.so.2.1200.0:vaInitialize { printf("vaInitialize: %d\n", arg0); }'
+sudo bpftrace -e 'uprobe:/usr/lib/x86_64-linux-gnu/libva.so.2.1200.0:vaCreateContext { printf("config = %d, w = %d, h = %d\n", arg1, arg2, arg3); }'
+
+sudo bpftrace -e 'uprobe:/usr/lib/x86_64-linux-gnu/dri/iHD_drv_video.so:mos_gem_context_create_ext { printf("mos_gem_context_create_ext\n"); }'
+sudo bpftrace -e 'uprobe:/usr/lib/x86_64-linux-gnu/dri/iHD_drv_video.so:do_exec2 { printf("do_exec2\n"); }'
+
+sudo bpftrace -e 'uprobe:/usr/lib/x86_64-linux-gnu/libdrm.so.2.4.0:drmIoctl { printf("drmIoctl: fd = %d, request = %ld\n", arg0, arg1); }'
+```
+
+## bpftrace + kprobe
+
 ### Lesson 1. Listing Probes
 
 ```bash
